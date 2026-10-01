@@ -1,0 +1,56 @@
+[project]
+study = "cpu_v3"
+seed = 123456
+model_name = "microsoft/codebert-base"
+model_revision = "3b0952feddeffad0063f274080e3c23d75e7eb39"
+dataset_name = "google/code_x_glue_cc_defect_detection"
+dataset_revision = "69bd48c03223c2104342acd9a807caf61ac3efb8"
+
+[training]
+# Optional LoRA settings; neural-head settings are below. No full-data subsampling.
+# ADR-007: 400 matches the original plan; median Devign function exceeds 256 tokens.
+max_length = 400
+epochs = 2
+train_batch_size = 2
+eval_batch_size = 8
+gradient_accumulation_steps = 16
+learning_rate = 1e-4
+weight_decay = 0.01
+warmup_ratio = 0.10
+max_grad_norm = 1.0
+num_workers = 0
+
+[runtime]
+cpu_threads = 6
+offline = false
+
+[features]
+batch_size = 4
+shard_size = 256
+pooling = "masked_mean"
+
+[head]
+hidden_sizes = [512, 128]
+dropout = 0.2
+batch_size = 128
+epochs = 24
+patience = 5
+learning_rate = 0.001
+weight_decay = 0.01
+
+[lora]
+rank = 8
+alpha = 16
+dropout = 0.05
+
+[quick_test]
+train_samples = 8
+validation_samples = 8
+max_length = 128
+epochs = 2
+
+[inference]
+threshold = 0.5
+explanation_batch_size = 4
+explanation_max_tokens = 128
+top_lines = 5

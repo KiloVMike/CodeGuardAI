@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CodeGuard AI — Colab Presentation Script (Deep Learning Talking Points)</title>
+<style>
+  @page { size: A4; margin: 15mm 13mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Arial, sans-serif; font-size: 10pt; line-height: 1.44;
+         color: #14213d; margin: 0; }
+  h1 { font-size: 19pt; margin: 0 0 4px; color: #0b1d3a; }
+  h2 { font-size: 13.5pt; margin: 19px 0 8px; padding: 5px 9px; background: #0b1d3a;
+       color: #fff; border-radius: 4px; page-break-after: avoid; }
+  h3 { font-size: 11pt; margin: 12px 0 4px; color: #123c6b; page-break-after: avoid; }
+  p { margin: 5px 0; }
+  ul, ol { margin: 4px 0 7px; padding-left: 18px; }
+  li { margin: 2px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 7px 0 10px; font-size: 9.2pt;
+          page-break-inside: avoid; }
+  th, td { border: 1px solid #b9c4d4; padding: 4px 7px; text-align: left; vertical-align: top; }
+  th { background: #e8eef7; }
+  code { font-family: Consolas, monospace; font-size: 9.1pt; background: #eef1f6;
+         padding: 1px 4px; border-radius: 3px; }
+  pre { background: #0f1b2d; color: #e8eef7; padding: 9px 11px; border-radius: 5px;
+        font-size: 8.6pt; line-height: 1.38; white-space: pre-wrap; page-break-inside: avoid; }
+  .cover { border: 3px solid #0b1d3a; border-radius: 8px; padding: 16px 19px; margin-bottom: 12px; }
+  .subtitle { color: #45608a; font-size: 11pt; }
+  .cell { border: 1px solid #c9d4e3; border-radius: 6px; padding: 10px 13px; margin: 0 0 12px;
+          page-break-inside: avoid; background: #fbfcfe; }
+  .cell h3 { margin-top: 0; }
+  .lbl { display: inline-block; font-size: 8.3pt; font-weight: 700; color: #fff;
+         background: #123c6b; padding: 1px 8px; border-radius: 9px; margin-right: 6px; }
+  .lbl.say { background: #166534; }
+  .lbl.dl { background: #7c3aed; }
+  .lbl.screen { background: #0b1d3a; }
+  .say { background: #f0fdf4; border-left: 3px solid #166534; padding: 6px 10px;
+         margin: 5px 0; border-radius: 0 4px 4px 0; }
+  .dl { background: #f5f3ff; border-left: 3px solid #7c3aed; padding: 6px 10px;
+        margin: 5px 0; border-radius: 0 4px 4px 0; }
+  .screen { background: #eef3fb; border-left: 3px solid #123c6b; padding: 6px 10px;
+            margin: 5px 0; border-radius: 0 4px 4px 0; }
+  .hard { background: #fdecec; border-left: 3px solid #b91c1c; padding: 6px 10px;
+          margin: 5px 0; border-radius: 0 4px 4px 0; }
+  .cheat { background: #fff8e1; border: 1px solid #e0b400; padding: 9px 12px;
+           border-radius: 5px; margin: 8px 0; }
+  .small { font-size: 8.7pt; color: #4a5a75; }
+  .num { text-align: right; font-family: Consolas, monospace; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>Colab Presentation Script — with Deep Learning proof points</h1>
+  <div class="subtitle">Say-this / click-this guide for
+    <code>CodeGuardAI_Interview_Presentation.ipynb</code></div>
+  <p><b>Notebook:</b> <code>artifacts\cpu_v3\CodeGuardAI_Interview_Presentation.ipynb</code> —
+  25 cells, 14 numbered sections, 10 embedded plots, all results baked in as text.
+  <b>It needs no execution and no project files:</b> upload to Colab, open, and scroll — every
+  table and image is already inside the file (the only code cell is commented out on purpose).</p>
+  <p><b>How to use this script:</b> for each section — glance at <span class="lbl screen">ON SCREEN</span>,
+  say <span class="lbl say">SAY</span> in your own words, and when relevant point at the
+  <span class="lbl dl">DEEP LEARNING PROOF</span> — that is your evidence that this is a DL project.</p>
+</div>
+
+<div class="cheat">
+<b>Before you start — 60-second checklist:</b> upload the .ipynb to Colab &middot; wait for the
+title cell to render (all images load from embedded data, no internet needed) &middot; set the
+browser to full screen &middot; have <i>Presentation Mastery Guide</i> and <i>Interview Q&amp;A</i>
+PDFs open on your phone as backup &middot; take a breath.
+</div>
+
+<div class="cheat">
+<b>Numbers on the first slide of your memory:</b> encoder <b>124,645,632 frozen params</b> &middot;
+head <b>461,186 trainable params</b> &middot; linear probe <b>1,538</b> &middot; val AUC
+<b>0.6372 / 0.6569 / 0.6554</b> &middot; test F1 <b>0.647 vs 0.505 vs 0.000</b> &middot; recall
+<b>0.933</b> &middot; FN <b>84 vs 678</b> &middot; AUC <b>0.656 vs 0.621</b> &middot; threshold
+<b>0.33</b> &middot; bundle <b>8f0a21195194fc1912b9</b>
+</div>
+
+<h2>Opening (before section 1)</h2>
+<div class="cell">
+  <div class="screen"><span class="lbl screen">ON SCREEN</span> Title cell: "CodeGuard AI —
+  Deep Learning for Vulnerable C Function Detection", study <code>cpu_v3</code>, frozen
+  <code>codebert-base</code>, and the one-paragraph summary.</div>
+  <div class="say"><span class="lbl say">SAY</span> "This is CodeGuard AI — a deep learning
+  system that flags vulnerable C functions. The headline: I train a neural network on top of a
+  frozen pretrained code transformer — deep transfer learning — and I follow a strict protocol:
+  every model-selection decision uses validation data only, and the official test set is opened
+  exactly once, after everything is frozen. I'll walk you through the problem, the network, the
+  experiments, the results, and the honest limitations."</div>
+  <div class="dl"><span class="lbl dl">DL PROOF</span> Your first sentence must contain
+  <b>neural network</b>, <b>pretrained transformer</b>, and <b>transfer learning</b>. Never say
+  "fine-tuning" — the encoder weights never change.</div>
+</div>
+
+<h2>Sections 1–14 of the notebook</h2>
+
+<div class="cell"><h3>1. Problem and goal</h3>
+  <div class="screen"><span class="lbl screen">ON SCREEN</span> Task definition (0 = safe,
+  1 = vulnerable), why C vulnerabilities matter, metric choice (P/R/F1 for the vulnerable class
+  plus accuracy), and the note that a "always safe" model already reaches majority accuracy.</div>
+  <div class="say"><span class="lbl say">SAY</span> "Binary classification per C function on the
+  Devign dataset. Because almost half the test functions are vulnerable, accuracy alone is
+  misleading — a model that always answers 'safe' gets 54% — so the project optimizes F1 and
+  recall on the vulnerable class. I set that expectation now, because one of my headline numbers
+  depends on it."</div>
+  <div class="dl"><span class="lbl dl">DL PROOF</span> Pre-empt the accuracy trap in section 1
+  itself — it shows the metric design came from the data distribution, not from hiding results.</div>
+</div>
+
+<div class="cell"><h3>2. Dataset — official CodeXGLUE/Devign splits</h3>
+  <div class="screen"><span class="lbl screen">ON SCREEN</span> Split table (21,854 / 2,732 /
+  2,732 with class shares), cross-split overlap numbers (8 / 4 / 1), label-noise caveat, and the
+  class-balance + function-length plot.</div>
+  <div class="say"><span class="lbl say">SAY</span> "Official splits, never merged or reshuffled.
+  I audited for leakage first: exact-code overlap between splits is 8, 4 and 1 functions out of
+  thousands — reported, not silently deleted. The length histogram matters: over half of training
+  functions exceed 400 tokens, so they get truncated — I'll come back to that as a limitation.
+  These labels come from real commits, so they're noisy — a known ceiling on any model."</div>
+  <div class="dl"><span class="lbl dl">DL PROOF</span> Mention that the plot was produced by the
+  same pipeline that feeds the network (tokenizer length distribution) — data understanding is
+  part of the deep learning workflow.</div>
+</div>
+
+<div class="cell"><h3>3. Method — frozen encoder + trained head (deep transfer learning)</h3>
+  <div class="screen"><span class="lbl screen">ON SCREEN</span> The architecture diagram block:
+  tokenizer → frozen 12-layer CodeBERT (124,645,632 params) → masked mean pooling →
+  standardization → trainable head 768→512→128→2 (GELU, dropout 0.2) → softmax. Plus trainable
+  parameter counts, why-frozen rationale, class-weighting note.</div>
+  <div class="say"><span class="lbl say">SAY</span> (read the diagram as a story) "A C function
+  becomes up to 400 token IDs, flows through a <b>12-layer pretrained transformer</b> — frozen, so
+  gradients never touch it — producing a 400×768 matrix of contextual token embeddings. Masked
+  mean pooling collapses that to one 768-d vector per function. Then a <b>trainable neural head</b>
+  — LayerNorm, linear layers with GELU activations, dropout 0.2, two hidden layers of 512 and
+  128 — learns the decision boundary, and softmax gives P(vulnerable)."</div>
+  <div class="dl"><span class="lbl dl">DL PROOF</span> <b>This is your core slide.</b> Emphasize:
+  transformer self-attention, contextual embeddings, non-linear GELU activations, dropout
+  regularization, LayerNorm, softmax output, 461,186 parameters <i>learned by gradient descent</i>.
+  Say the numbers: "124.6 million frozen, 461 thousand trained — the head alone is a deep
+  network: three weight matrices, two non-linearities, regularization."</div>
+</div>
+
+<div class="cell"><h3>4. Experimental design and integrity</h3>
+  <div class="screen"><span class="lbl screen">ON SCREEN</span> Controlled-experiment table
+  (C0 linear / C1 mlp / C2 weighted with heads and losses), then the 5-step protocol: selection
+  by validation AUC, threshold grid 0.05–0.95, ensemble rule, hash freeze, one-time test.</div>
+  <div class="say"><span class="lbl say">SAY</span> "Three networks, same features, same data,
+  same seed — only the declared factor differs: a linear probe, a two-hidden-layer MLP, and the
+  same MLP with class-weighted cross-entropy loss. Every decision — ranking, threshold, ensemble —
+  reads validation only and was written into code before I ran anything. Then everything is
+  frozen into a SHA-256 hashed bundle. Only after that does the test set get opened, exactly
+  once."</div>
+  <div class="dl"><span class="lbl dl">DL PROOF</span> Name the deep-learning machinery here:
+  <b>cross-entropy loss</b>, <b>class-weighted loss</b>, <b>gradient descent with AdamW</b>,
+  <b>early stopping</b>, <b>dropout</b> — this is how neural networks are trained, and it's all
+  controlled in the table.</div>
+</div>
+
+<div class="cell"><h3>5. Compute environment and honest cost</h3>
+  <div class="screen"><span class="lbl screen">ON SCREEN</span> CPU-only machine (Ryzen 5 5600G),
+  encoder benchmark 3.91 samples/s, extraction time, total wall time.</div>
+  <div class="say"><span class="lbl say">SAY</span> "No GPU. That constraint drove the design:
+  run the expensive 125M-parameter encoder <b>once</b>, cache the activations, and train small
+  heads on cached tensors — each head trains in about 20–25 seconds. The whole study —
+  extraction, three trainings, freeze, test — is reproducible in roughly 85 minutes."</div>
+  <div class="dl"><span class="lbl dl">DL PROOF</span> Explain that feature extraction is a
+  forward pass of a deep network under <code>torch.no_grad()</code> — the DL model still computes
+  the representation; we simply don't update it. This is a standard, resource-aware engineering
+  decision, not a shortcut around deep learning.</div>
+</div>
+
+<div class="cell"><h3>6. Validation results (development data — test not involved)</h3>
+  <div class="screen"><span class="lbl screen">ON SCREEN</span> Validation comparison table:
+  linear 0.6372 / mlp 0.6569 / weighted 0.6554 AUC with tuned thresholds and F1, plus training
+  curves and threshold sweep plots.</div>
+  <div class="say"><span class="lbl say">SAY</span> "On validation, ranked by ROC-AUC: linear
+  probe 0.637, MLP 0.657, weighted MLP 0.655 — and here's the interesting part: the deep head
+  beats the linear probe by two AUC points on identical features. That difference is the learned
+  non-linearity doing real work. Thresholds were tuned on this same validation data — 0.22, 0.33,
+  0.37 — never on test."</div>
+  <div class="dl"><span class="lbl dl">DL PROOF</span> <b>Key argument:</b> "If this were just
+  feature extraction, the linear probe would be enough. The MLP's win (0.657 vs 0.637) is
+  empirical evidence that training the neural network matters." Also point at the training curves:
+  loss decreasing over epochs = the network learning via backpropagation.</div>
+</div>
+
+<div class="cell"><h3>7. Frozen selection</h3>
+  <div class="screen"><span class="lbl screen">ON SCREEN</span> Selection outcome: chosen model,
+  threshold 0.33, bundle ID, ensemble decision (rejected), recorded rules.</div>
+  <div class="say"><span class="lbl say">SAY</span> "The MLP won by the pre-registered rule.
+  The two-model ensemble was tested and <b>rejected</b> because it didn't beat the single model on
+  validation — a negative result I report like any other. Bundle 8f0a21195194fc1912b9 now locks
+  weights, tokenizer, threshold and hashes. From this point the study cannot change."</div>
+  <div class="dl"><span class="lbl dl">DL PROOF</span> Short section — use it to show experiment
+  discipline: model selection is part of the deep learning workflow, and rejecting complexity
+  without measured gain is maturity, not timidity.</div>
+</div>
+
+<div class="cell"><h3>8. Final test results (opened exactly once)</h3>
+  <div class="screen"><span class="lbl screen">ON SCREEN</span> Test comparison: baseline vs
+  selected vs majority — accuracy, precision, recall, F1, AUC, confusion counts.</div>
+  <div class="say"><span class="lbl say">SAY</span> "One test evaluation, after freezing.
+  Selected model: <b>F1 0.647</b> versus 0.505 for my linear baseline and zero for a majority
+  guess; <b>recall 93%</b> — 1,171 of 1,255 vulnerable functions caught, only <b>84 missed</b>,
+  where the baseline missed 678. ROC-AUC 0.656 versus 0.621. That's a +0.142 F1 and +0.47 recall
+  improvement over my baseline."</div>
+  <div class="dl"><span class="lbl dl">DL PROOF</span> If asked why accuracy is 53.2% (below the
+  54.1% majority): "The threshold was frozen on validation by an F1-then-recall rule before the
+  test set was opened — accuracy was never the objective. At that operating point the model wins
+  F1, recall, FN count and threshold-free AUC. Choosing a different threshold afterwards to
+  improve accuracy would be test-set tuning, which my protocol forbids."</div>
+</div>
+
+<div class="cell"><h3>9. Error analysis</h3>
+  <div class="screen"><span class="lbl screen">ON SCREEN</span> Confusion-matrix style breakdown
+  and misclassified examples (false positives / false negatives discussion).</div>
+  <div class="say"><span class="lbl say">SAY</span> "Errors go both ways. The 84 false negatives
+  are the dangerous ones — my selection rule minimizes them by design. The 1,194 false positives
+  cost reviewer time — that's the price of a high-recall screening tool, and the threshold can be
+  moved without retraining. Label noise explains part of both: with function-level labels from
+  commits, some 'errors' are the dataset, not the model."</div>
+  <div class="dl"><span class="lbl dl">DL PROOF</span> Frame error analysis as reading the
+  softmax/threshold behavior of a probabilistic model — deep models output scores, and operating
+  points are a decision layer on top, not part of the network.</div>
+</div>
+
+<div class="cell"><h3>10. Explainability — what the model looks at</h3>
+  <div class="screen"><span class="lbl screen">ON SCREEN</span> Token-occlusion explanation
+  method, sample influential lines with signed influences, disclaimer text.</div>
+  <div class="say"><span class="lbl say">SAY</span> "For any prediction I mask individual tokens
+  and re-run the network — the drop in P(vulnerable) is that token's signed influence on the
+  decision. Summing per line gives the highlighted lines you see. Important: this is an
+  <b>influence explanation, not a guaranteed vulnerability location</b> — the dataset has no
+  line-level ground truth to verify against."</div>
+  <div class="dl"><span class="lbl dl">DL PROOF</span> Occlusion only works because the model is
+  a differentiable function you can query repeatedly — classic model-based interpretability for
+  neural networks. Do not claim localization accuracy.</div>
+</div>
+
+<div class="cell"><h3>11. How this compares with published references</h3>
+  <div class="screen"><span class="lbl screen">ON SCREEN</span> Two tables: (a) accuracy vs
+  published Devign numbers (BiLSTM 0.5937, TextCNN 0.6069, RoBERTa 0.6105, fine-tuned CodeBERT
+  0.6208 — all marked "verify citation") with our measured rows; (b) the imbalance-aware view
+  (accuracy/F1/recall/AUC for majority, baseline, selected) plus the operating-point explanation.</div>
+  <div class="say"><span class="lbl say">SAY</span> "Context: published Devign work clusters in
+  the low 60s in accuracy — those rows are reference points and I'll cite the exact papers. My
+  comparable number — baseline at threshold 0.5 — is 58.6%. And here's the honest table: at my
+  frozen threshold my accuracy is lower, but on every imbalance-aware metric the selected model
+  leads: F1 0.647 vs 0.505 vs 0, recall 93% vs 46% vs 0, AUC 0.656 vs 0.621 vs 0.5."</div>
+  <div class="dl"><span class="lbl dl">DL PROOF</span> Positioning: "A frozen encoder with a
+  trained head lands near fully fine-tuned models from the literature while running on a CPU in
+  hours — that's the transfer-learning payoff."</div>
+</div>
+
+<div class="cell"><h3>12. Limitations (stated before anyone asks)</h3>
+  <div class="screen"><span class="lbl screen">ON SCREEN</span> Truncation rate, noisy labels,
+  frozen-encoder ceiling, precision at chosen threshold, explanation caveats.</div>
+  <div class="say"><span class="lbl say">SAY</span> "Limitations, stated first: over half of
+  functions are truncated at 400 tokens; labels are noisy at function level; the frozen encoder
+  caps accuracy below full fine-tuning; at threshold 0.33 about half of flags are false alarms;
+  and explanations are influences, not verified locations. Each of these is also in my future-work
+  list."</div>
+  <div class="dl"><span class="lbl dl">DL PROOF</span> Naming limits — especially "frozen encoder
+  ceiling" — shows you understand exactly what fine-tuning would add and why you drew the line
+  where you did.</div>
+</div>
+
+<div class="cell"><h3>13. Reproduce locally (CPU only)</h3>
+  <div class="screen"><span class="lbl screen">ON SCREEN</span> Command chain from prepare to
+  evaluate, runtime expectations, artifact locations.</div>
+  <div class="say"><span class="lbl say">SAY</span> "Everything is one command chain — extract,
+  train three heads, compare, finalize, evaluate — all local, no cloud, no API. Artifacts are
+  CSV/JSON plus hash-verified checkpoints; every number in this deck comes from those files, not
+  from me typing it. Re-running evaluate just re-displays the stored result."</div>
+  <div class="dl"><span class="lbl dl">DL PROOF</span> Mention that training uses AdamW with a
+  linear warmup schedule, gradient accumulation and early stopping — production-grade neural
+  training machinery, all in the reproducible chain.</div>
+</div>
+
+<div class="cell"><h3>14. Anticipated interview questions</h3>
+  <div class="screen"><span class="lbl screen">ON SCREEN</span> Q&amp;A cells (why not 90%,
+  why not fine-tune, overfitting/peeking, GPU plans, explanation reliability, accuracy vs majority).</div>
+  <div class="say"><span class="lbl say">SAY</span> Don't read these aloud — they're your
+  lifeline. Keep this section visible at the end of the scroll as your "answers page". If the
+  panel asks something on screen, point: "I anticipated that — my answer's right there, and
+  here's the reasoning…"</div>
+  <div class="dl"><span class="lbl dl">DL PROOF</span> The strongest cell: "Is the encoder being
+  frozen still deep learning?" → see the proof chapter below.</div>
+</div>
+
+<h2>The centerpiece: how to prove this is a Deep Learning project</h2>
+<p>Use this chapter whenever someone challenges the "deep learning" claim — verbally or on a
+whiteboard.</p>
+
+<h3>1. Draw this architecture (30 seconds on a whiteboard)</h3>
+<pre>C function  "int f(){ char b[10]; strcpy(b, src); }"
+     │  tokenizer → up to 400 token ids + attention mask
+     ▼
+┌────────────────────────────────────────────────────────┐
+│  CodeBERT — 12-layer transformer  [FROZEN, 124,645,632] │
+│  per layer: multi-head self-attention → feed-forward    │
+│             → LayerNorm (residual)                      │
+│  output: 400 × 768 contextual token embeddings          │
+└────────────────────────────────────────────────────────┘
+     │  masked mean pooling (padding excluded)
+     ▼
+   768-d vector
+     │  standardization (mean/std stored in checkpoint)
+     ▼
+┌──────────────────────────────────────────┐
+│  TRAINABLE HEAD — 461,186 params          │
+│  LayerNorm(768) → Linear(768→512)         │
+│  → GELU → Dropout(0.2)                    │
+│  → Linear(512→128) → GELU → Dropout(0.2)  │
+│  → Linear(128→2)                          │
+└──────────────────────────────────────────┘
+     │  softmax over 2 logits
+     ▼
+   P(vulnerable)  ≥ 0.33 ?  "Potentially Vulnerable" : "Low likelihood"</pre>
+
+<h3>2. The seven proof points (say them with numbers)</h3>
+<table>
+<tr><th style="width:26%">Proof</th><th>What you say</th></tr>
+<tr><td><b>1. Neural architecture</b></td><td>"A 12-layer transformer with self-attention plus a
+three-layer MLP head with GELU non-linearities, LayerNorm and dropout — that's a deep network
+computing my features <i>and</i> my decision."</td></tr>
+<tr><td><b>2. Learned, not hand-crafted</b></td><td>"No rules, no regexes, no expert features —
+every representation comes out of neural layers trained by gradient descent. My features are
+<i>computed</i>, not <i>defined</i>."</td></tr>
+<tr><td><b>3. Training is real backpropagation</b></td><td>"Cross-entropy loss, backprop,
+AdamW optimizer with linear warmup, gradient accumulation, batches of 128, up to 24 epochs with
+early stopping (patience 5) — the standard deep learning training loop. The models stopped at
+epochs 9, 10 and 10."</td></tr>
+<tr><td><b>4. The network demonstrably learns</b></td><td>"Training curves show loss falling over
+epochs; and on identical features, the trained MLP beats the linear probe: AUC 0.657 vs 0.637.
+That gap <i>is</i> what neural training adds."</td></tr>
+<tr><td><b>5. Parameter math</b></td><td>"124,645,632 frozen encoder parameters + 461,186
+trainable head parameters (1,538 for the linear baseline). I update ~461K weights per step — the
+entire learning happens inside a neural network."</td></tr>
+<tr><td><b>6. Regularization is neural</b></td><td>"Dropout 0.2, LayerNorm, weight decay 0.01,
+early stopping, class-weighted loss — all deep-learning techniques applied here, all visible in
+the config."</td></tr>
+<tr><td><b>7. Frozen ≠ shallow</b></td><td>"Fine-tuning is one <i>regime</i> of deep learning,
+not its definition. Frozen-backbone transfer learning is standard practice — frozen BERT/GPT
+embeddings power industry systems every day. The deep parts still do the thinking; we just don't
+retrain the representation on a CPU."</td></tr>
+</table>
+
+<h3>3. If they push: three hostile questions, three tight answers</h3>
+<div class="hard"><b>"So it's just feature extraction with logistic regression?"</b> →
+"It would be, if I used the linear probe — and that's my <i>baseline</i>, AUC 0.637. My selected
+model is a trained 461K-parameter neural network that beats it (0.657) with two non-linear
+hidden layers and dropout. The features come from a deep transformer; the classifier is deep
+too."</div>
+<div class="hard"><b>"Deep learning means you update the big model, right?"</b> →
+"That's fine-tuning — one technique. Deep learning describes the model class (many-layered
+non-linear networks) and how it's trained (gradient descent on a differentiable loss). Both hold
+here: the network is deep, and I train 461K parameters with backprop. I simply freeze the
+backbone because I have no GPU — and I say so upfront instead of pretending."</div>
+<div class="hard"><b>"Prove the head actually learned something."</b> →
+"Three proofs: training loss decreased across epochs with early stopping on validation loss;
+trained heads beat the untrained-random and linear baselines (0.657 vs 0.637 AUC); and on test
+the learned threshold of 0.33 cuts false negatives from 678 to 84. I can show the training curves
+in the deck right now."</div>
+
+<h3>4. What NOT to say</h3>
+<table>
+<tr><th style="width:44%">Never say</th><th>Say instead</th></tr>
+<tr><td>"I fine-tuned CodeBERT"</td><td>"I used a frozen pretrained CodeBERT with a trained head — deep transfer learning"</td></tr>
+<tr><td>"The model is 90% accurate / catches everything"</td><td>"F1 0.647, recall 93%, AUC 0.656 — measured once on a frozen test set"</td></tr>
+<tr><td>"The heatmap shows the vulnerability"</td><td>"Occlusion shows which tokens influenced the prediction — no line-level ground truth exists"</td></tr>
+<tr><td>"The accuracy is lower because… (mumbling)"</td><td>Say it first, loudly, with the two-table comparison — you designed that explanation</td></tr>
+<tr><td>"I used AI to write it" (unless asked)</td><td>"The protocol, code, tests and artifacts are mine; every number traces to a file on disk"</td></tr>
+</table>
+
+<h2>Closing statement (end of the deck)</h2>
+<div class="say"><span class="lbl say">SAY</span> "To summarize: a deep learning system —
+pretrained transformer representation, a trained neural classifier, gradient-based training,
+controlled experiments — evaluated under a protocol that makes the numbers trustworthy: frozen
+bundle, one-time test, everything reproducible on a CPU in 85 minutes. The model catches 93% of
+vulnerable functions with F1 0.647 versus 0.505 for my baseline. The limitations are real and
+documented, and I know exactly what a GPU and finer labels would add next. Happy to take
+questions."</div>
+
+<div class="cheat">
+<b>Final reminder — the three sentences that must appear somewhere in your talk:</b>
+<ol>
+<li>"This is <b>deep transfer learning</b>: a frozen 12-layer CodeBERT and a trained 461K-parameter
+neural head — <b>not</b> fine-tuning."</li>
+<li>"Selection, threshold and ensemble rules were fixed <b>before</b> the test set was opened —
+exactly once."</li>
+<li>"F1 <b>0.647</b> vs 0.505 baseline, recall <b>93%</b>, missed vulnerabilities cut from
+<b>678 to 84</b>."</li>
+</ol>
+</div>
+
+<p class="small" style="margin-top:12px">Companions: <i>CodeGuardAI_Presentation_Mastery_Guide.pdf</i>
+(full project knowledge) and <i>CodeGuardAI_Interview_QA.pdf</i> (~50 predicted questions).
+All numbers verified against <code>artifacts/cpu_v3/</code> artifacts.</p>
+
+</body>
+</html>

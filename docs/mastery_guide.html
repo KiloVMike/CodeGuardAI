@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>CodeGuard AI — Presentation Mastery Guide</title>
+<style>
+  @page { size: A4; margin: 16mm 14mm; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Arial, sans-serif; font-size: 10.2pt; line-height: 1.45;
+         color: #14213d; margin: 0; }
+  h1 { font-size: 21pt; margin: 0 0 4px; color: #0b1d3a; }
+  h2 { font-size: 14pt; margin: 22px 0 8px; padding: 5px 9px; background: #0b1d3a;
+       color: #fff; border-radius: 4px; page-break-after: avoid; }
+  h3 { font-size: 11.4pt; margin: 14px 0 5px; color: #123c6b; page-break-after: avoid; }
+  p { margin: 6px 0; }
+  ul, ol { margin: 6px 0 8px; padding-left: 20px; }
+  li { margin: 3px 0; }
+  table { border-collapse: collapse; width: 100%; margin: 8px 0 12px; font-size: 9.3pt;
+          page-break-inside: avoid; }
+  th, td { border: 1px solid #b9c4d4; padding: 5px 7px; text-align: left; vertical-align: top; }
+  th { background: #e8eef7; color: #0b1d3a; }
+  tr:nth-child(even) td { background: #f7f9fc; }
+  code, .mono { font-family: Consolas, "Courier New", monospace; font-size: 9.4pt;
+                background: #eef1f6; padding: 1px 4px; border-radius: 3px; }
+  pre { background: #0f1b2d; color: #e8eef7; padding: 9px 11px; border-radius: 5px;
+        font-size: 8.8pt; line-height: 1.4; white-space: pre-wrap; page-break-inside: avoid; }
+  .cover { border: 3px solid #0b1d3a; border-radius: 8px; padding: 18px 20px; margin-bottom: 14px; }
+  .subtitle { color: #45608a; font-size: 11pt; margin: 2px 0 8px; }
+  .box { border-left: 4px solid #0b1d3a; background: #eef3fb; padding: 8px 12px;
+         margin: 9px 0; border-radius: 0 4px 4px 0; page-break-inside: avoid; }
+  .warn { border-left: 4px solid #b91c1c; background: #fdecec; }
+  .good { border-left: 4px solid #166534; background: #ecfdf3; }
+  .num { text-align: right; font-family: Consolas, monospace; }
+  .center { text-align: center; }
+  .small { font-size: 8.8pt; color: #4a5a75; }
+  .cheat { background: #fff8e1; border: 1px solid #e0b400; padding: 10px 13px;
+           border-radius: 5px; page-break-inside: avoid; }
+  .pagebreak { page-break-before: always; }
+  .two { display: flex; gap: 12px; }
+  .two > div { flex: 1; }
+  .tag { display: inline-block; background: #123c6b; color: #fff; font-size: 8.2pt;
+         padding: 1px 7px; border-radius: 9px; margin-right: 5px; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <h1>CodeGuard AI — Presentation Mastery Guide</h1>
+  <div class="subtitle">Everything you need to know to present and defend this project</div>
+  <p><b>Task:</b> binary vulnerability detection in C functions (Devign dataset) &middot;
+  <b>Method:</b> frozen CodeBERT encoder + trained neural heads (deep transfer learning) &middot;
+  <b>Hardware:</b> CPU-only laptop/desktop (AMD Ryzen 5 5600G, 6C/12T, ~16 GB RAM) &middot;
+  <b>Study:</b> <code>cpu_v3</code>, completed 2026-10-01, test set opened exactly once.</p>
+  <p class="small">Companion document: <i>CodeGuardAI_Interview_QA.pdf</i> (predicted questions + answers).
+  Numbers below are measured on this machine unless marked "published — verify citation".</p>
+</div>
+
+<h2>1. The 30-second summary (memorize this)</h2>
+<div class="box good">
+<p><b>"I built a deep transfer learning system that flags vulnerable C functions. I take a
+pre-trained CodeBERT language model, freeze it, and train a small neural head on top of its
+embeddings — this is transfer learning, not fine-tuning, because the 125M encoder weights never
+change. I ran three experiments on the official Devign splits, selected the model by validation
+ROC-AUC, froze the threshold and the weights <i>before</i> touching the test set, then evaluated
+once. My selected model reaches F1 0.647 versus 0.505 for my linear baseline and 0.000 for a
+majority-class guess, with 93% recall — it catches 1171 of 1255 vulnerable test functions while
+missing only 84."</b></p>
+</div>
+
+<h2>2. Key facts sheet</h2>
+<table>
+<tr><th style="width:34%">Item</th><th>Value</th></tr>
+<tr><td>Project root</td><td><code>C:\Users\A_R_COMPUTERS\Downloads\CodeGuardAI</code></td></tr>
+<tr><td>Language / runtime</td><td>Python 3.12, local virtualenv <code>.venv</code>, PyTorch CPU, Transformers, Gradio</td></tr>
+<tr><td>Hardware</td><td>AMD Ryzen 5 5600G (6 cores / 12 threads), ~15.3 GB RAM, Windows 11, <b>no GPU</b></td></tr>
+<tr><td>Encoder</td><td><code>microsoft/codebert-base</code>, revision <code>3b0952fe…</code>, 125M parameters, <b>frozen</b></td></tr>
+<tr><td>Dataset</td><td>CodeXGLUE / Devign (Function-level C vulnerabilities), labels: 0 = non-vulnerable, 1 = vulnerable</td></tr>
+<tr><td>Splits (official)</td><td>train 21,854 &middot; validation 2,732 &middot; test 2,732</td></tr>
+<tr><td>Class balance (test)</td><td>1,255 vulnerable (45.94%) vs 1,477 non-vulnerable (54.06%)</td></tr>
+<tr><td>Study config</td><td><code>cpu_v3</code>: max_length 400 tokens, head [512, 128], dropout 0.2, batch 128, epochs 24, patience 5, lr 0.001, weight decay 0.01, seed 123456</td></tr>
+<tr><td>Selected model</td><td>C1 MLP head, bundle <code>final_model/8f0a21195194fc1912b9</code>, threshold 0.33, ensemble rejected</td></tr>
+<tr><td>Encoder speed</td><td>3.91 samples/second @400 tokens (measured, <code>benchmark.json</code>)</td></tr>
+<tr><td>Wall time of full study</td><td>~85 minutes (extraction 75 min, heads &lt;1 min each, evaluation + notebooks ~9 min)</td></tr>
+<tr><td>Truncation</td><td>55.7% of train / 55.5% of validation functions exceed 400 tokens</td></tr>
+<tr><td>Test policy</td><td>Opened exactly once after freeze; signature stored in <code>test_opened.json</code></td></tr>
+<tr><td>Quality gates</td><td>24 unit tests passing, <code>ruff check .</code> clean</td></tr>
+<tr><td>Deliverables</td><td>CLI, Gradio web demo, local evidence notebook, self-contained Colab interview notebook, full docs set</td></tr>
+</table>
+
+<h2>3. Problem &amp; dataset</h2>
+<ul>
+<li><b>Goal:</b> given one C function, output "vulnerable" or "not vulnerable" (binary classification
+on the vulnerable class = label 1).</li>
+<li><b>Source:</b> Devign — function-level vulnerability dataset from real C projects (FFmpeg, Qemu),
+released via CodeXGLUE. Labels come from commit history (vulnerable vs. fixed versions).</li>
+<li><b>Official splits used as-is:</b> 21,854 / 2,732 / 2,732. Splits are never merged or shuffled across.</li>
+<li><b>Audit performed</b> (<code>codeguard audit</code>): duplicate and cross-split overlap checks —
+train∩validation 8, train∩test 4, validation∩test 1 functions in common (out of thousands; reported
+honestly, never silently removed).</li>
+<li><b>Why it's hard:</b> noisy function-level labels (a function is marked vulnerable even if the bug
+is elsewhere), long functions (over half exceed 400 tokens → truncated), heavy class ambiguity,
+and no line-level ground truth.</li>
+<li><b>Tokenization:</b> CodeBERT BPE tokenizer; <code>max_length = 400</code> chosen as the accuracy/throughput
+trade-off for this CPU (benchmark at 128 tokens vs 400 tokens; 400 keeps more context, still fits RAM).</li>
+</ul>
+
+<div class="box">
+<b>Answer to "why 400 tokens?":</b> it was benchmarked, not guessed. At 400 tokens the encoder
+runs 3.91 samples/s (full study ≈ 85 min on this CPU), and longer sequences would double runtime
+for functions where the vulnerability signal is usually local. The truncation rate (55.7%) is
+reported openly as a limitation.
+</div>
+
+<h2>4. Method — what the model actually is</h2>
+
+<h3>4.1 Pipeline (one function)</h3>
+<pre>source code
+   │  CodeBERT tokenizer (max 400 tokens)
+   ▼
+token ids + attention mask
+   │  FROZEN CodeBERT encoder  (125M params, torch.no_grad — weights never updated)
+   ▼
+last_hidden_state  (400 × 768)
+   │  masked mean pooling  (average token vectors, ignoring padding)
+   ▼
+one 768-d vector
+   │  standardization (running mean/std, stored in the checkpoint)
+   ▼
+ TRAINED HEAD  (LayerNorm, 768 → 512 → 128 → 2, GELU, dropout 0.2)
+   │  softmax over 2 classes
+   ▼
+P(vulnerable)  ──≥ threshold 0.33──►  "Potentially Vulnerable"
+</pre>
+
+<h3>4.2 Mean pooling formula</h3>
+<p class="mono center">h = Σᵢ (maskᵢ · hiddenᵢ) / Σᵢ maskᵢ &nbsp;&nbsp;for i over the 400 token positions</p>
+<p>Padding tokens (mask = 0) are excluded, so the vector represents the actual code content only.</p>
+
+<h3>4.3 Why this is transfer learning (and not fine-tuning)</h3>
+<table>
+<tr><th>Aspect</th><th>Fine-tuning (what we did NOT do)</th><th>What we did</th></tr>
+<tr><td>Encoder weights</td><td>updated by gradients</td><td><b>frozen forever</b> — identical before/after training</td></tr>
+<tr><td>Trainable parameters</td><td>125M+</td><td>~0.5M in the head only</td></tr>
+<tr><td>Cost</td><td>GPU-days</td><td>~20–25 seconds per experiment on CPU</td></tr>
+<tr><td>Risk</td><td>overfits, needs GPU</td><td>reproducible, deterministic, hours not weeks</td></tr>
+</table>
+<div class="box warn"><b>Never say "fine-tuned CodeBERT" in the presentation.</b>
+Say: "frozen pretrained CodeBERT features + a trained neural classifier head — standard
+resource-constrained transfer learning."</div>
+
+<h3>4.4 The three experiments</h3>
+<table>
+<tr><th>ID</th><th>Name</th><th>Head</th><th>Loss</th><th>Purpose</th></tr>
+<tr><td>C0</td><td><code>linear</code></td><td>768 → 2 (linear probe)</td><td>cross-entropy</td><td>baseline: how far do raw features get us?</td></tr>
+<tr><td>C1</td><td><code>mlp</code></td><td>768 → 512 → 128 → 2</td><td>cross-entropy</td><td>main model: non-linear decision boundary</td></tr>
+<tr><td>C2</td><td><code>weighted</code></td><td>same as C1</td><td>class-weighted CE</td><td>does penalizing FN-heavy mistakes help?</td></tr>
+</table>
+<p>All three: seed 123456, same features, same batch size 128, early stopping with patience 5 on
+validation loss (all three stopped early: epochs 9 / 10 / 10 of 24).</p>
+
+<h2>5. Experimental protocol (the part that earns marks)</h2>
+<ol>
+<li><b>Selection rule (frozen in advance):</b> rank experiments by <b>validation ROC-AUC</b>, tie-break
+by tuned F1, then recall. Implemented in code (<code>_selection_key</code>), not chosen by hand.</li>
+<li><b>Threshold rule (frozen in advance):</b> grid 0.05 → 0.95 step 0.01 (91 points); maximize F1,
+tie-break: higher recall → fewer false negatives → closest to 0.50.</li>
+<li><b>Ensemble rule (frozen in advance):</b> average probabilities of the top two models; keep it
+only if it beats the single best model's tuned F1 on validation. <b>Result: rejected</b> — honest negative result.</li>
+<li><b>Standardization:</b> head input uses running mean/std computed during training, stored as
+buffers in the checkpoint (<code>set_statistics</code>) so inference never leaks training data stats.</li>
+<li><b>Freeze:</b> <code>codeguard finalize</code> writes the bundle (weights + tokenizer + encoder +
+specs), records SHA-256 hashes of every checkpoint, then <code>verify_bundle</code> re-hashes on every load.</li>
+<li><b>One-time test:</b> <code>codeguard evaluate</code> writes <code>test_opened.json</code>; if evaluation is
+re-run it just re-displays stored results — no second look, no tuning afterwards.</li>
+<li><b>Smoke vs research:</b> quick mode uses a separate namespace (<code>artifacts/cpu_v3/smoke/</code>)
+and is never reported as a research result.</li>
+</ol>
+
+<h3>Validation results (development evidence)</h3>
+<table>
+<tr><th>Experiment</th><th class="num">ROC-AUC</th><th class="num">Best thr.</th><th class="num">Tuned F1</th><th class="num">Tuned recall</th><th class="num">Tuned accuracy</th></tr>
+<tr><td>C0 linear</td><td class="num">0.6372</td><td class="num">0.22</td><td class="num">0.6155</td><td class="num">0.9655</td><td class="num">0.4758</td></tr>
+<tr><td><b>C1 mlp — selected</b></td><td class="num"><b>0.6569</b></td><td class="num"><b>0.33</b></td><td class="num"><b>0.6301</b></td><td class="num">0.9343</td><td class="num">0.5234</td></tr>
+<tr><td>C2 weighted</td><td class="num">0.6554</td><td class="num">0.37</td><td class="num">0.6247</td><td class="num">0.9242</td><td class="num">0.5176</td></tr>
+</table>
+<p class="small">Ranked: mlp 0.6569 &gt; weighted 0.6554 &gt; linear 0.6372 → <b>mlp selected</b>.
+Ensemble of mlp+weighted did not beat mlp alone → <b>rejected</b>.</p>
+
+<h2>6. Final results (test set, opened once)</h2>
+<table>
+<tr><th>Model</th><th class="num">Thr.</th><th class="num">Accuracy</th><th class="num">Precision</th><th class="num">Recall</th><th class="num">F1</th><th class="num">ROC-AUC</th><th class="num">TP</th><th class="num">FP</th><th class="num">FN</th><th class="num">TN</th></tr>
+<tr><td>Majority guess (always safe)</td><td class="num">—</td><td class="num">0.5406</td><td class="num">—</td><td class="num">0.000</td><td class="num">0.000</td><td class="num">0.500</td><td class="num">0</td><td class="num">0</td><td class="num">1255</td><td class="num">1477</td></tr>
+<tr><td>Baseline linear probe</td><td class="num">0.50</td><td class="num"><b>0.5860</b></td><td class="num">0.5602</td><td class="num">0.4598</td><td class="num">0.5050</td><td class="num">0.6206</td><td class="num">577</td><td class="num">453</td><td class="num">678</td><td class="num">1024</td></tr>
+<tr><td><b>Selected mlp (frozen)</b></td><td class="num">0.33</td><td class="num">0.5322</td><td class="num">0.4951</td><td class="num"><b>0.9331</b></td><td class="num"><b>0.6470</b></td><td class="num"><b>0.6560</b></td><td class="num">1171</td><td class="num">1194</td><td class="num"><b>84</b></td><td class="num">283</td></tr>
+</table>
+
+<h3>What changed vs baseline (selected − baseline)</h3>
+<table>
+<tr><th>Metric</th><th class="num">Baseline</th><th class="num">Selected</th><th class="num">Delta</th></tr>
+<tr><td>F1 (vulnerable class)</td><td class="num">0.5050</td><td class="num">0.6470</td><td class="num"><b>+0.1419</b></td></tr>
+<tr><td>Recall</td><td class="num">0.4598</td><td class="num">0.9331</td><td class="num"><b>+0.4733</b></td></tr>
+<tr><td>False negatives (missed vulnerabilities)</td><td class="num">678</td><td class="num">84</td><td class="num"><b>−594</b></td></tr>
+<tr><td>False positives</td><td class="num">453</td><td class="num">1194</td><td class="num">+741</td></tr>
+<tr><td>Accuracy</td><td class="num">0.5860</td><td class="num">0.5322</td><td class="num">−0.0538</td></tr>
+<tr><td>ROC-AUC (threshold-free)</td><td class="num">0.6206</td><td class="num">0.6560</td><td class="num">+0.0354</td></tr>
+</table>
+
+<div class="box warn">
+<b>The one awkward number — own it before they ask.</b><br>
+At the frozen threshold, selected accuracy (53.2%) is <i>below</i> the majority guess (54.1%).
+<b>Why:</b> the threshold (0.33) was chosen on validation data only, by the pre-registered rule
+"maximize F1, then recall" — the right objective when 46% of test functions are vulnerable.
+That operating point deliberately casts a wide net (recall 93%). A model that flags everything
+has F1 = 0 and never catches anything by luck; our model has F1 0.647, catches 1171/1255, and its
+threshold-free ROC-AUC (0.656) beats baseline (0.621) and the trivial 0.5. The threshold was
+frozen <b>before</b> the test set was opened, so no number here was chosen to look good.
+</div>
+
+<div class="box">
+<b>Interpretation in one line:</b> the model is a <i>high-recall screening tool</i> — it flags more
+code than it must (precision 0.495) so that almost nothing vulnerable slips through (84 misses vs
+678 for the baseline). For a first-pass security triage tool that is the correct trade; the
+operating point can be moved without retraining.
+</div>
+
+<h2>7. Explainability (token occlusion)</h2>
+<ul>
+<li>For a prediction, each token position is replaced with the mask token in batches; the drop in
+P(vulnerable) measures that token's <b>signed influence</b>.</li>
+<li>Influences are summed per source line → top lines ranked by |influence| (default top 10).</li>
+<li><b>Positive</b> influence = removing the token lowered the score (token pushed toward vulnerable);
+<b>negative</b> = it pushed toward safe.</li>
+<li>Explanation targets the <b>predicted class</b> (not always class 1).</li>
+<li>Honest limits: it is an <b>influence explanation, not a guaranteed vulnerability location</b> —
+the dataset has no line-level ground truth to verify against. Scores are uncalibrated softmax
+outputs, not security guarantees.</li>
+</ul>
+
+<h2>8. The demo (live UI)</h2>
+<ul>
+<li>Run: <code>run_demo.bat</code> (or <code>codeguard demo --open</code>); binds to
+<code>http://127.0.0.1:7860</code>, auto-falls back to the next free port if busy.</li>
+<li>Loads the frozen bundle, verifies all SHA-256 hashes, prints the URL, opens the browser.</li>
+<li>Features: code editor (C), one-click examples (analysis runs on click), verdict badge with
+probability bar, metrics summary, line-by-line influence table, machine-readable JSON, Clear button.</li>
+<li>Error handling: empty input, non-string, &gt;200k characters and internal errors all produce a
+friendly panel — never a raw traceback. Queue is limited so double-clicks are safe.</li>
+<li>Everything runs locally: <code>127.0.0.1</code> only, no cloud, no external API.</li>
+</ul>
+
+<h2>9. How the code is organized</h2>
+<table>
+<tr><th style="width:30%">File</th><th>Responsibility</th></tr>
+<tr><td><code>src/codeguard_ai/config.py</code></td><td>TOML config, paths, quick/research namespaces, CPU device selection, local HF cache</td></tr>
+<tr><td><code>src/codeguard_ai/data.py</code></td><td>official Devign splits, hashing, fingerprinting</td></tr>
+<tr><td><code>src/codeguard_ai/features.py</code></td><td>resumable feature extraction, benchmark, occlusion batches</td></tr>
+<tr><td><code>src/codeguard_ai/models.py</code></td><td>encoder loading, masked mean pooling, <code>NeuralHead</code> (with standardization buffers)</td></tr>
+<tr><td><code>src/codeguard_ai/losses.py</code></td><td>cross-entropy + class-weighted variant</td></tr>
+<tr><td><code>src/codeguard_ai/training.py</code></td><td>training loop, early stopping, checkpoint save/load</td></tr>
+<tr><td><code>src/codeguard_ai/metrics.py</code></td><td>classification metrics, threshold grid search (0.05–0.95)</td></tr>
+<tr><td><code>src/codeguard_ai/workflows.py</code></td><td>prepare/compare/finalize/evaluate, selection &amp; ensemble rules, bundle verification</td></tr>
+<tr><td><code>src/codeguard_ai/inference.py</code></td><td><code>CodeAnalyzer</code>: single + ensemble paths, occlusion explanation</td></tr>
+<tr><td><code>src/codeguard_ai/web.py</code></td><td>Gradio demo (port fallback, formatting helpers, error panels)</td></tr>
+<tr><td><code>src/codeguard_ai/reporting.py</code></td><td>EDA plots, audit, local notebook + self-contained Colab interview notebook generator</td></tr>
+<tr><td><code>src/codeguard_ai/artifacts.py</code></td><td>JSON I/O, SHA-256 hashing, provenance</td></tr>
+<tr><td><code>src/codeguard_ai/cli.py</code></td><td>commands: doctor, prepare, audit, benchmark, extract, train, compare, finalize, evaluate, analyze, demo, notebook, interview</td></tr>
+<tr><td><code>tests/</code></td><td>24 unit tests (config, models/standardization, selection, metrics/thresholds, losses, web)</td></tr>
+<tr><td><code>docs/</code></td><td>PROJECT_SPEC, RESEARCH_PROTOCOL, ARCHITECTURE, STATUS, DEVELOPMENT_PLAN, AI_HANDOFF, DECISIONS (ADR-001…011), RUNBOOK</td></tr>
+</table>
+
+<h3>End-to-end commands (what was actually run)</h3>
+<pre>codeguard prepare      # cache data + encoder (provenance)
+codeguard audit        # leakage/duplicate audit + EDA plot
+codeguard benchmark    # 3.91 samples/s @400 tokens
+codeguard extract      # frozen CodeBERT pass over train + validation (75 min)
+codeguard train --experiment linear   # C0
+codeguard train --experiment mlp      # C1
+codeguard train --experiment weighted # C2
+codeguard compare      # validation table + tuned metrics + training plots
+codeguard finalize     # selection + threshold + bundle + hashes   (FREEZE)
+codeguard evaluate     # one-time test evaluation                  (TEST OPENED)
+codeguard notebook     # local evidence notebook
+codeguard interview    # self-contained Colab interview deck
+codeguard demo --open  # Gradio UI on 127.0.0.1:7860</pre>
+
+<h2>10. Provenance &amp; integrity (say this out loud in the talk)</h2>
+<ul>
+<li>Test data never influenced model choice, threshold, ensemble decision, or any hyperparameter —
+those were all decided on validation data and recorded in <code>final_config.json</code> with hashes.</li>
+<li>The evaluation writes <code>test_opened.json</code> (signature <code>5057547dc1ed1815…</code>); re-running
+just re-displays stored metrics. Development commands refuse afterwards.</li>
+<li>Every bundle file is SHA-256 verified at load time (<code>verify_bundle</code>) — corrupted or swapped
+weights cannot silently load.</li>
+<li>All reported numbers come from CSV/JSON artifacts on disk, never typed manually.</li>
+<li>Published literature numbers in the deck are labelled <b>"verify citation"</b> — you must insert
+the exact paper references before presenting them.</li>
+</ul>
+
+<h2>11. Results compared with published Devign work (context)</h2>
+<table>
+<tr><th>Approach</th><th class="num">Accuracy</th><th>Source</th></tr>
+<tr><td>Majority-class guess</td><td class="num">0.5406</td><td>computed on this test split</td></tr>
+<tr><td>BiLSTM</td><td class="num">0.5937</td><td>published — verify citation</td></tr>
+<tr><td>TextCNN</td><td class="num">0.6069</td><td>published — verify citation</td></tr>
+<tr><td>RoBERTa</td><td class="num">0.6105</td><td>published — verify citation</td></tr>
+<tr><td>CodeBERT (full fine-tuning)</td><td class="num">0.6208</td><td>published — verify citation</td></tr>
+<tr><td>Our baseline @0.5</td><td class="num">0.5860</td><td>this study, measured</td></tr>
+<tr><td>Our selected @0.33</td><td class="num">0.5322</td><td>this study, measured (F1/recall-optimized)</td></tr>
+</table>
+<p class="small">Honest positioning: full fine-tuning of CodeBERT in the literature reaches the low
+60s in accuracy; our frozen encoder + trained head sits in the same neighborhood on F1 while
+running on CPU in hours. We make <b>no SOTA claim</b>.</p>
+
+<h2>12. Limitations &amp; future work</h2>
+<div class="two">
+<div>
+<h3>Limitations (admit first)</h3>
+<ul>
+<li>55.7% of train functions are truncated at 400 tokens.</li>
+<li>Function-level labels are noisy — some "vulnerable" functions have no local bug.</li>
+<li>Encoder frozen → accuracy ceiling below full fine-tuning (~62% in literature).</li>
+<li>Precision 0.495 at the chosen threshold → ~half of flags are false alarms.</li>
+<li>Explanations are influences, not verified vulnerability locations.</li>
+<li>Dataset bias: only FFmpeg/Qemu; may not generalize to other C projects.</li>
+</ul>
+</div>
+<div>
+<h3>Future work (the standard answers)</h3>
+<ul>
+<li>GPU → fine-tune CodeBERT end-to-end; hyperparameter sweeps on validation.</li>
+<li>Long-context handling (400-token truncation): sliding windows or longer-context models.</li>
+<li>Probability calibration (temperature scaling) and cost-sensitive thresholds per use case.</li>
+<li>Code-specific encoders, data augmentation, cross-project evaluation.</li>
+<li>Line-level attribution validated against real CVE patches.</li>
+</ul>
+</div>
+</div>
+
+<h2>13. Presentation script</h2>
+<h3>Slide-by-slide plan (10–12 slides, ~10 minutes)</h3>
+<ol>
+<li><b>Title + problem:</b> vulnerable C code exists; manual review doesn't scale; goal: flag risky functions.</li>
+<li><b>Dataset:</b> Devign, splits 21854/2732/2732, labels, class balance (46% vulnerable), audit (leak check).</li>
+<li><b>Why transfer learning:</b> no GPU; frozen CodeBERT + trained head = the honest scope; explicitly "not fine-tuning".</li>
+<li><b>Architecture:</b> token ids → frozen encoder → masked mean pool (show formula) → standardization → MLP head → softmax.</li>
+<li><b>Protocol:</b> three experiments; selection by validation AUC; threshold grid; ensemble rule; seed; everything frozen before test.</li>
+<li><b>Validation table:</b> linear 0.6372 / mlp 0.6569 / weighted 0.6554 → selected mlp; ensemble rejected (honest negative result).</li>
+<li><b>Test results:</b> big table — F1 0.647 vs 0.505 vs 0.000; recall 93%; FN 84 vs 678.</li>
+<li><b>The accuracy caveat:</b> address it yourself with the two-table imbalance view + operating-point explanation.</li>
+<li><b>Explainability:</b> occlusion demo, influence table, honest disclaimer.</li>
+<li><b>Live demo:</b> paste code → verdict + explanation (or the recorded video).</li>
+<li><b>Limits + future work.</li>
+<li><b>Integrity close:</b> hashes, one-time test, reproducible in ~85 minutes on a CPU.</li>
+</ol>
+
+<h3>Two-minute spoken version</h3>
+<div class="box">
+<p>"Software vulnerabilities in C are common and manual review is slow, so I built a system that
+flags vulnerable functions automatically. I used the official Devign dataset with its official
+splits — about 22 thousand training functions and 2.7 thousand each for validation and test —
+and audited it for duplicates and leakage first.</p>
+<p>Because I had no GPU, I used <b>deep transfer learning</b>: a pretrained CodeBERT encoder that
+stays <b>frozen</b>, with only a small neural head trained on top of its mean-pooled embeddings.
+That's ~half a million trainable parameters instead of 125 million, which made the whole study
+reproducible on a CPU in about 85 minutes.</p>
+<p>I trained three heads — a linear probe, an MLP, and a class-weighted MLP — and selected by
+validation ROC-AUC using a rule I fixed in advance, together with the threshold grid and an
+ensemble rule. The MLP won with 0.657 AUC and the ensemble was honestly rejected.</p>
+<p>Everything — weights, threshold 0.33, hashes — was frozen <b>before</b> I opened the test set
+exactly once. On test, my model scores F1 0.647 against 0.505 for my baseline and zero for a
+majority guess, with 93% recall: it catches 1171 of 1255 vulnerable functions and misses only 84.
+The threshold is recall-oriented, so accuracy at that operating point is 53% — below the 54%
+majority guess — and I explain that openly rather than hide it: the pre-registered objective was
+F1, and the threshold-free ROC-AUC is 0.656 versus 0.621 for the baseline.</p>
+<p>The system also explains each prediction with token occlusion, ships a local web demo, and
+every metric comes from stored, hashed artifacts — no hand-typed numbers."</p>
+</div>
+
+<h2>14. Cheat sheet — numbers to memorize</h2>
+<div class="cheat">
+<table>
+<tr><td><b>Splits</b></td><td class="num">21,854 / 2,732 / 2,732</td><td><b>Selected AUC (val)</b></td><td class="num">0.6569</td></tr>
+<tr><td><b>Test vulnerable / safe</b></td><td class="num">1,255 / 1,477 (45.94% / 54.06%)</td><td><b>Selected AUC (test)</b></td><td class="num">0.6560</td></tr>
+<tr><td><b>Threshold (frozen)</b></td><td class="num">0.33</td><td><b>Baseline AUC (test)</b></td><td class="num">0.6206</td></tr>
+<tr><td><b>Selected F1</b></td><td class="num">0.6470</td><td><b>Baseline F1</b></td><td class="num">0.5050</td></tr>
+<tr><td><b>Selected recall</b></td><td class="num">0.9331 (TP 1171)</td><td><b>Baseline recall</b></td><td class="num">0.4598 (TP 577)</td></tr>
+<tr><td><b>Missed vulns (FN)</b></td><td class="num">84 vs 678 baseline</td><td><b>Δ F1</b></td><td class="num">+0.1419</td></tr>
+<tr><td><b>Selected accuracy</b></td><td class="num">0.5322</td><td><b>Majority accuracy</b></td><td class="num">0.5406</td></tr>
+<tr><td><b>Truncation @400</b></td><td class="num">55.7% train</td><td><b>Encoder speed</b></td><td class="num">3.91 /s</td></tr>
+<tr><td><b>Bundle</b></td><td class="num">8f0a21195194fc1912b9</td><td><b>Full run</b></td><td class="num">~85 min, CPU only</td></tr>
+<tr><td><b>Trainable params</b></td><td class="num">~0.5M (head only)</td><td><b>Encoder</b></td><td class="num">125M frozen</td></tr>
+</table>
+</div>
+
+<h2>15. Files you may be asked to show</h2>
+<table>
+<tr><th style="width:46%">What</th><th>Where</th></tr>
+<tr><td>Interview notebook (upload to Colab — runs standalone)</td><td><code>artifacts\cpu_v3\CodeGuardAI_Interview_Presentation.ipynb</code></td></tr>
+<tr><td>Validation comparison</td><td><code>artifacts\cpu_v3\results\validation_comparison.csv</code></td></tr>
+<tr><td>Test comparison + threshold analysis</td><td><code>artifacts\cpu_v3\results\test_comparison.json</code>, <code>threshold_analysis.csv</code></td></tr>
+<tr><td>Test-opened proof</td><td><code>artifacts\cpu_v3\results\test_opened.json</code></td></tr>
+<tr><td>Frozen bundle + hashes</td><td><code>artifacts\cpu_v3\final_model\8f0a21195194fc1912b9\</code> + <code>final_config.json</code></td></tr>
+<tr><td>Confusion matrices / ROC / threshold plots</td><td><code>artifacts\cpu_v3\plots\</code></td></tr>
+<tr><td>Training logs</td><td><code>artifacts\cpu_v3\train_stdout.log</code></td></tr>
+<tr><td>Full runbook &amp; decisions</td><td><code>docs\RUNBOOK.md</code>, <code>docs\DECISIONS.md</code></td></tr>
+</table>
+
+<h2>16. Glossary (one-line definitions)</h2>
+<table>
+<tr><td><b>Transfer learning</b></td><td>reuse a pretrained model's representations for a new task; here the encoder is frozen and only the head trains.</td></tr>
+<tr><td><b>Fine-tuning</b></td><td>updating the pretrained weights themselves — we do NOT do this.</td></tr>
+<tr><td><b>Linear probe</b></td><td>a single linear layer trained on frozen features; measures feature quality alone.</td></tr>
+<tr><td><b>Mean pooling</b></td><td>averaging token vectors (ignoring padding) into one vector per function.</td></tr>
+<tr><td><b>Precision</b></td><td>of the functions flagged, how many were truly vulnerable (1171/2365 = 0.495).</td></tr>
+<tr><td><b>Recall</b></td><td>of truly vulnerable functions, how many were caught (1171/1255 = 0.933).</td></tr>
+<tr><td><b>F1</b></td><td>harmonic mean of precision and recall; the pre-registered selection objective.</td></tr>
+<tr><td><b>ROC-AUC</b></td><td>probability the model ranks a random vulnerable function above a random safe one; threshold-free.</td></tr>
+<tr><td><b>Threshold</b></td><td>the probability cut-off converting a score into a decision (frozen at 0.33).</td></tr>
+<tr><td><b>Early stopping</b></td><td>stop training when validation loss stops improving (patience 5 epochs).</td></tr>
+<tr><td><b>Truncation</b></td><td>cutting functions longer than 400 tokens (affects 55.7% of train).</td></tr>
+<tr><td><b>Occlusion</b></td><td>masking one token at a time to measure its influence on the prediction.</td></tr>
+<tr><td><b>Class imbalance</b></td><td>54/46 split — why accuracy alone is misleading and F1/recall matter.</td></tr>
+<tr><td><b>Leakage</b></td><td>test information accidentally used during development; prevented by protocol + audit.</td></tr>
+</table>
+
+<p class="small" style="margin-top:16px">Generated for the CodeGuard AI final presentation.
+All measured numbers trace to artifacts under <code>artifacts/cpu_v3/</code>. Literature accuracy
+figures are reference points requiring exact citations before use.</p>
+
+</body>
+</html>

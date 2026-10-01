@@ -1,0 +1,30 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+build/
+dist/
+*.egg-info/
+
+# Local datasets, model downloads, and generated evidence can be large.
+.cache/
+artifacts/
+
+# OS and IDE metadata
+.vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
+*.log
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Environment / Secret files
+.env
+.env.*
+
